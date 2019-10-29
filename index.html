@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Lemurs</title>
+    <meta charset="utf-8">
+    <link href="index.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <form>
+        <input type="number" placeholder="Количество лемуров" min="1" max="1000" required>
+        <button class="generate-btn" type="submit">Сгенерировать данные</button>
+        <button class="get-result-btn" type="submit" >Получить результат</button>
+      </form>
+      <table>
+        <thead>
+          <tr>
+            <td>Исходные данные</td>
+            <td>Результат</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="data"></div></td>
+            <td><div class="result"></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
