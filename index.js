@@ -74,6 +74,8 @@ var allLemurs = '';
 generateDataBtn.addEventListener('click', function () {
   if (input.value <= 0 || !input.value) {
     addError('Необходимо указать число больше 0');
+  } else if (input.value > 1000 ) {
+    addError('Необходимо указать число не больше 1000');
   } else {
     removeError();
     if (resultCell.textContent) {
