@@ -39,9 +39,8 @@ form {
 
 input {
   box-sizing: border-box;
-  width: 382px;
-  padding: 10px 15px;
-  margin-left: 10px;
+  width: 393px;
+  padding: 18px 15px;
 
   border-radius: 35px;
   border: none;
@@ -69,7 +68,33 @@ button:hover {
 }
 
 label {
-  font-weight: 600;
+  position: relative;
+}
+
+.error {
+  position: absolute;
+  top: 0;
+  left: 18px;
+  z-index: -1;
+
+  width: 349px;
+  height: 50px;
+
+  color: red;
+}
+
+.error-show {
+  animation: error-show 0.5s ease;
+  animation-fill-mode: forwards;
+}
+
+@keyframes error-show {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-55%);
+  }
 }
 
 .data {
