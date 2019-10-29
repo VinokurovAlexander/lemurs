@@ -96,3 +96,48 @@ getResultBtn.addEventListener('click', function() {
     resultCell.textContent = getResult(allLemurs);
   }
 });
+
+
+
+///--------------------------------------------------
+
+var Animal = function (animalTypes) {
+  animalTypes.forEach((type) => {
+    this[type] = 0;
+  })
+}
+
+Animal.prototype.getPopularType = (types) => {
+  types = types.split('\n');
+  types.pop();
+  types.forEach(function (type) {
+    this[type]++
+  });
+
+  var answer = [];
+  var maxValue = Math.max(...Object.values(this));
+
+  for (key in this) {
+    if (this[key] === maxValue) {
+      answer.push(key);
+    }
+  }
+
+  return answer
+}
+
+Animal.prototype.generateAnimalTypes = (numberOfAnimals) => {
+  var types = '';
+  for (var i = 0; i < numberOfAnimals; i++) {
+    var index = Math.floor(Math.random() * this.keys.length);
+    types = types + this.keys[index] + '\n';
+  }
+
+  if (this.getPopularType(string).length > 1) {
+    return generateData(numberOfLemurs);
+  }
+  return string;
+}
+
+var lemurs = new Animal(['Карликовый', 'Руконожковый', 'Индриевый']);
+console.log(lemurs);
