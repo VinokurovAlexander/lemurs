@@ -52,16 +52,45 @@ function getResult(lemurs) {
 
 var generateDataBtn = document.querySelector('.generate-btn');
 var input = document.querySelector('input');
+var resultCell = document.querySelector('.result');
+var dataCell = document.querySelector('.data');
+var error = document.querySelector('.error');
+
+function addError(text) {
+  error.textContent = text;
+  error.classList.add('error-show');
+  input.style.border = '2px solid red';
+}
+
+function removeError() {
+  if (error.classList.contains('error-show')) {
+    error.classList.remove('error-show');
+    error.textContent = '';
+    input.style.border = 'none';
+  }
+}
 
 var allLemurs = '';
 generateDataBtn.addEventListener('click', function () {
-  var dataCell = document.querySelector('.data');
-  allLemurs = generateData(input.value);
-  dataCell.textContent = input.value + '\n' + allLemurs;
+  if (input.value <= 0 || !input.value) {
+    addError('Необходимо указать число больше 0');
+  } else {
+    removeError();
+    if (resultCell.textContent) {
+      resultCell.textContent = '';
+    }
+
+    allLemurs = generateData(input.value);
+    dataCell.textContent = input.value + '\n' + allLemurs;
+  }
 });
 
 var getResultBtn = document.querySelector('.get-result-btn');
 getResultBtn.addEventListener('click', function() {
-  var resultCell = document.querySelector('.result');
-  resultCell.textContent = getResult(allLemurs);
+  if (!dataCell.textContent) {
+    addError('Необходимо сгенерировать данные');
+  } else {
+    removeError();
+    resultCell.textContent = getResult(allLemurs);
+  }
 });
