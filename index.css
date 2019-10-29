@@ -72,15 +72,10 @@ label {
   font-weight: 600;
 }
 
-/* .data,
-.result {
-  text-align: center;
-} */
-
 .data {
   flex-flow: column wrap;
 
-  width: 113px;
+  width: 112px;
 }
 
 .container {

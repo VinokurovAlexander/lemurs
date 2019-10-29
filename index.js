@@ -6,21 +6,23 @@ var lemursType = ['Карликовый', 'Руконожковый', 'Индр�
  * @param {string} numberOfLemurs - Количество лемуров.
  * @return {string} Строка с лемурами.
  */
-function generateLemurs(numberOfLemurs) {
+function generateData(numberOfLemurs) {
   var lemurs = '';
   for (var i = 0; i < numberOfLemurs; i++) {
     var index = Math.floor(Math.random() * lemursType.length);
-    // lemurs.push(lemursType[index]);
     lemurs = lemurs + lemursType[index] + '\n';
   }
 
+  if (getResult(lemurs).length > 1) {
+    return generateData(numberOfLemurs);
+  }
   return lemurs;
 }
 
 /**
  * Функция возвращает самый популярный вид лемуров.
  *
- * @param {array} lemurs - Массив с лемурами.
+ * @param {string} lemurs - Строка с лемурами.
  * @return {array} Массив с самым популярным видом лемура.
  */
 function getResult(lemurs) {
@@ -30,9 +32,10 @@ function getResult(lemurs) {
     'Индриевый': 0
   };
 
-
+  lemurs = lemurs.split('\n');
+  lemurs.pop();
   lemurs.forEach(function (lemur, index) {
-    lemursCount[lemur.slice(1)]++;
+    lemursCount[lemur]++;
   });
 
   var answer = [];
@@ -47,7 +50,18 @@ function getResult(lemurs) {
   return answer
 }
 
+var generateDataBtn = document.querySelector('.generate-btn');
+var input = document.querySelector('input');
 
-var generateDataBtn = function ('click', function () {
-  
+var allLemurs = '';
+generateDataBtn.addEventListener('click', function () {
+  var dataCell = document.querySelector('.data');
+  allLemurs = generateData(input.value);
+  dataCell.textContent = input.value + '\n' + allLemurs;
+});
+
+var getResultBtn = document.querySelector('.get-result-btn');
+getResultBtn.addEventListener('click', function() {
+  var resultCell = document.querySelector('.result');
+  resultCell.textContent = getResult(allLemurs);
 });
