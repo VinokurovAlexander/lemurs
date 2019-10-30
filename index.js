@@ -1,23 +1,3 @@
-class Error {
-  constructor(element) {
-    this.element = element;
-  }
-
-  add(text) {
-    this.element.textContent = text;
-    this.element.classList.add('error-show');
-    input.style.border = '2px solid red';
-  }
-
-  remove() {
-    if (this.element.classList.contains('error-show')) {
-      this.element.classList.remove('error-show');
-      this.element.textContent = '';
-      input.style.border = 'none';
-    }
-  }
-}
-
 class Animal {
   constructor(animalTypes) {
     this.types = animalTypes;
@@ -36,7 +16,6 @@ class Animal {
 
     let popularType = [];
     let maxValue = Math.max(...Object.values(this.typesNumber));
-    console.log(maxValue);
 
     for (let key in this.typesNumber) {
       if (this.typesNumber[key] === maxValue) {
@@ -48,7 +27,7 @@ class Animal {
   }
 
   generateAnimals(numberOfAnimals) {
-
+    numberOfAnimals = parseInt(numberOfAnimals, 10);
     for (let key in this.typesNumber) {
       this.typesNumber[key] = 0
     }
@@ -67,36 +46,90 @@ class Animal {
     return animals;
   }
 }
-
 let lemurs = new Animal(['Карликовый', 'Руконожковый', 'Индриевый']);
-let errorMessage = new Error(document.querySelector('.error'));
 
-const input = document.querySelector('input');
-const resultCell = document.querySelector('.result');
-const dataCell = document.querySelector('.data');
-const generateDataBtn = document.querySelector('.generate-btn');
-const getResultBtn = document.querySelector('.get-result-btn');
+class Error {
+  constructor(errorWindow, input) {
+    this.element = errorWindow;
+    this.input = input;
+  }
 
-generateDataBtn.addEventListener('click', function () {
-  if (input.value <= 0 || !input.value) {
-    errorMessage.add('Необходимо указать число больше 0');
-  } else if (input.value > 1000 ) {
-    errorMessage.add('Необходимо указать число не больше 1000');
-  } else {
-    errorMessage.remove();
-    if (resultCell.textContent) {
-      resultCell.textContent = '';
+  add(text) {
+    this.element.textContent = text;
+    this.element.classList.add('error-show');
+    this.input.style.border = '2px solid red';
+  }
+
+  remove() {
+    if (this.element.classList.contains('error-show')) {
+      this.element.classList.remove('error-show');
+      this.element.textContent = '';
+      this.input.style.border = 'none';
     }
-
-    dataCell.textContent = input.value + '\n' + lemurs.generateAnimals(parseInt(input.value, 10));
   }
-});
+}
+const errorWindow = document.querySelector('.error');
+const dataNumberInput = document.querySelector('input');
+let errorMessage = new Error(errorWindow, dataNumberInput);
 
-getResultBtn.addEventListener('click', function() {
-  if (!dataCell.textContent) {
-    errorMessage.add('Необходимо сгенерировать данные');
-  } else {
-    errorMessage.remove();
-    resultCell.textContent = lemurs.getPopularType();
+class ReviewBlock {
+  constructor(dataCell, resultCell) {
+    this.data = dataCell;
+    this.result = resultCell;
   }
-});
+}
+const dataCell = document.querySelector('.data');
+const resultCell = document.querySelector('.result');
+const reviewBlock = new ReviewBlock(dataCell, resultCell);
+
+class DataButton {
+  constructor(button, dataInput, reviewBlock, generateData) {
+    this.element = button;
+    this.input = dataInput;
+    this.reviewBlock = reviewBlock;
+    this.generateData = generateData;
+  }
+
+  handler() {
+    if (this.input.value <= 0 || !this.input.value) {
+      errorMessage.add('Необходимо указать число больше 0', this.input);
+    } else if (this.input.value > 1000 ) {
+      errorMessage.add('Необходимо указать число не больше 1000', this.input);
+    } else {
+      errorMessage.remove(this.input);
+      if (this.reviewBlock.result.textContent) {
+        this.reviewBlock.result.textContent = '';
+      }
+
+      this.reviewBlock.data.textContent = this.input.value + '\n' + this.generateData(this.input.value);
+    }
+  }
+}
+
+const generateDataBtnElement = document.querySelector('.generate-btn');
+const generateData = lemurs.generateAnimals.bind(lemurs);
+let generateDataBtn = new DataButton(generateDataBtnElement, dataNumberInput, reviewBlock, generateData);
+generateDataBtn.element.addEventListener('click', generateDataBtn.handler.bind(generateDataBtn));
+
+class ResultButton {
+  constructor(button, dataInput, reviewBlock, getResult) {
+    this.element = button;
+    this.input = dataInput;
+    this.reviewBlock = reviewBlock;
+    this.getResult = getResult;
+  }
+
+  handler() {
+    if (!this.reviewBlock.data.textContent) {
+      errorMessage.add('Необходимо сгенерировать данные', this.input);
+    } else {
+      errorMessage.remove(this.input);
+      this.reviewBlock.result.textContent = this.getResult();
+    }
+  }
+}
+
+const getResultBtnElement = document.querySelector('.get-result-btn');
+const getResult = lemurs.getPopularType.bind(lemurs);
+let getResultBtn = new ResultButton(getResultBtnElement, dataNumberInput, reviewBlock, getResult);
+getResultBtn.element.addEventListener('click', getResultBtn.handler.bind(getResultBtn));
