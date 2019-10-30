@@ -1,14 +1,17 @@
-var error = document.querySelector('.error');
-function addError(text) {
-  error.textContent = text;
-  error.classList.add('error-show');
+var Error = function (element) {
+  this.element = element;
+}
+
+Error.prototype.add = function (text) {
+  this.element.textContent = text;
+  this.element.classList.add('error-show');
   input.style.border = '2px solid red';
 }
 
-function removeError() {
-  if (error.classList.contains('error-show')) {
-    error.classList.remove('error-show');
-    error.textContent = '';
+Error.prototype.remove = function () {
+  if (this.element.classList.contains('error-show')) {
+    this.element.classList.remove('error-show');
+    this.element.textContent = '';
     input.style.border = 'none';
   }
 }
@@ -28,16 +31,16 @@ Animal.prototype.getPopularType = function (types) {
     this.animalsNumber[type]++
   }.bind(this));
 
-  var answer = [];
+  var popularType = [];
   var maxValue = Math.max(...Object.values(this.animalsNumber));
 
   for (key in this.animalsNumber) {
     if (this.animalsNumber[key] === maxValue) {
-      answer.push(key);
+      popularType.push(key);
     }
   }
 
-  return answer
+  return popularType;
 }
 
 Animal.prototype.generateAnimalsTypes = function (numberOfAnimals) {
@@ -49,7 +52,7 @@ Animal.prototype.generateAnimalsTypes = function (numberOfAnimals) {
   var types = '';
   for (var i = 0; i < numberOfAnimals; i++) {
     var index = Math.floor(Math.random() * this.animalsTypes.length);
-    types = types + this.animalsTypes[index] + '\n';
+    types += this.animalsTypes[index] + '\n';
   }
 
   if (this.getPopularType(types).length > 1) {
@@ -64,14 +67,15 @@ var input = document.querySelector('input');
 var resultCell = document.querySelector('.result');
 var dataCell = document.querySelector('.data');
 var generateDataBtn = document.querySelector('.generate-btn');
+var errorMessage = new Error(document.querySelector('.error'));
 
 generateDataBtn.addEventListener('click', function () {
   if (input.value <= 0 || !input.value) {
-    addError('Необходимо указать число больше 0');
+    errorMessage.add('Необходимо указать число больше 0');
   } else if (input.value > 1000 ) {
-    addError('Необходимо указать число не больше 1000');
+    errorMessage.add('Необходимо указать число не больше 1000');
   } else {
-    removeError();
+    errorMessage.remove();
     if (resultCell.textContent) {
       resultCell.textContent = '';
     }
@@ -84,9 +88,9 @@ var getResultBtn = document.querySelector('.get-result-btn');
 
 getResultBtn.addEventListener('click', function() {
   if (!dataCell.textContent) {
-    addError('Необходимо сгенерировать данные');
+    errorMessage.add('Необходимо сгенерировать данные');
   } else {
-    removeError();
+    errorMessage.remove();
     resultCell.textContent = lemurs.getPopularType(lemurs.allAnimals);
   }
 });
